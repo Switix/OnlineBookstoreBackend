@@ -11,6 +11,6 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
 
     List<Category> findAllByNameLikeIgnoreCase(String category);
 
-    @Query("SELECT new com.switix.onlinebookstore.dto.CategoryBookCountDTO(c.id, c.name, COUNT(b)) FROM Category c LEFT JOIN c.categoryBooks b GROUP BY c.id, c.name")
+    @Query("SELECT new com.switix.onlinebookstore.dto.CategoryBookCountDTO(c.id, c.name, COUNT(b)) FROM Category c LEFT JOIN c.categoryBooks b GROUP BY c.id, c.name ORDER BY c.name ASC")
     List<CategoryBookCountDTO> countBooksByCategory();
 }
