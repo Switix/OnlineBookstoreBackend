@@ -22,8 +22,9 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .anyRequest().hasRole("CUSTOMER")
+                                //.requestMatchers("/api/auth/**").permitAll()
+                                //.anyRequest().hasRole("CUSTOMER")
+                                .anyRequest().permitAll()
                 )
                 .formLogin(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable);

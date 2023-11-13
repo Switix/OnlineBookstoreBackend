@@ -9,13 +9,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "role")
-public class Role {
+public class BookInventory {
 
     @Id
+    @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String name;
+    @Column(nullable = false)
+    private Integer quantity;
 }
