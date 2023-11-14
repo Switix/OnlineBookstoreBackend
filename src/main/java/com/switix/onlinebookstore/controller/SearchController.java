@@ -1,7 +1,8 @@
 package com.switix.onlinebookstore.controller;
 
 
-import com.switix.onlinebookstore.dto.CategoryBookCountDTO;
+import com.switix.onlinebookstore.dto.AuthorBookCountDto;
+import com.switix.onlinebookstore.dto.CategoryBookCountDto;
 import com.switix.onlinebookstore.dto.SearchDto;
 import com.switix.onlinebookstore.repository.CategoryRepository;
 import com.switix.onlinebookstore.service.AuthorService;
@@ -31,8 +32,13 @@ public class SearchController {
         return result;
     }
     @GetMapping("categories")
-    public List<CategoryBookCountDTO> getCategories() {
+    public List<CategoryBookCountDto> getCategories() {
         return categoryRepository.countBooksByCategory();
+
+    }
+    @GetMapping("authors")
+    public List<AuthorBookCountDto> getAuthors() {
+        return authorService.countAllBooksMadeByAuthors();
 
     }
 }

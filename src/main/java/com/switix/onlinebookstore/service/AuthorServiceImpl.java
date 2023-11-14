@@ -1,5 +1,6 @@
 package com.switix.onlinebookstore.service;
 
+import com.switix.onlinebookstore.dto.AuthorBookCountDto;
 import com.switix.onlinebookstore.model.Author;
 import com.switix.onlinebookstore.repository.AuthorRepository;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,10 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Optional<Author> getAuthorById(Long id) {
         return authorRepository.findById(id);
+    }
+
+    @Override
+    public List<AuthorBookCountDto> countAllBooksMadeByAuthors() {
+        return authorRepository.countBooksByAuthorOrderedByName();
     }
 }
