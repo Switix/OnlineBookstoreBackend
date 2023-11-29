@@ -12,5 +12,5 @@ import lombok.Setter;
 public class AuthorBookCountDto {
     private Long id;
     private String name;
-    private Long bookCount;
+    private Long count;
 }

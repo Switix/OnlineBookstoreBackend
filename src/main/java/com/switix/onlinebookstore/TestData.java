@@ -52,7 +52,7 @@ public class TestData {
         book1.setBookAuthors(authors.stream()
                 .filter(author -> author.getName().equals("J.K. Rowling"))
                 .collect(Collectors.toSet()));
-        book1.setCategory(categories.get(0));
+        book1.setCategory(categories.get(1));
 
 
         Book book2 = new Book();
