@@ -46,6 +46,7 @@ public class TestData {
 
         Book book1 = new Book();
         book1.setTitle("Harry Potter and the Philosopher's Stone");
+        book1.setImageUrl("harry_potter_and_the_philosopher_stone.jpg");
         book1.setDescription("A young wizard's journey at Hogwarts.");
         book1.setPrice(new BigDecimal("78.90"));
         book1.setInventory(bookInventories.get(0));
@@ -53,18 +54,24 @@ public class TestData {
                 .filter(author -> author.getName().equals("J.K. Rowling"))
                 .collect(Collectors.toSet()));
         book1.setCategory(categories.get(1));
+        book1.setIsbn("9780747532743");
+        book1.setPublicationYear(1997);
 
 
         Book book2 = new Book();
         book2.setTitle("1984");
+        book2.setImageUrl("harry_potter_and_the_philosopher_stone.jpg");
         book2.setDescription("A dystopian novel about a totalitarian regime.");
         book2.setPrice(new BigDecimal("109.99"));
         book2.setInventory(bookInventories.get(1));
         book2.setBookAuthors(new HashSet<>(authors));
         book2.setCategory(categories.get(1));
+        book2.setIsbn("9780748902721");
+        book2.setPublicationYear(2001);
 
         Book book3 = new Book();
         book3.setTitle("It");
+        book3.setImageUrl("It.jpg");
         book3.setDescription( "A horror novel by Stephen King.");
         book3.setPrice(new BigDecimal("154.34"));
         book3.setInventory(bookInventories.get(2));
@@ -72,9 +79,12 @@ public class TestData {
                 .filter(author -> author.getName().contains("Stephen King"))
                 .collect(Collectors.toSet()));
         book3.setCategory(categories.get(2));
+        book3.setIsbn("9780747512345");
+        book3.setPublicationYear(2007);
 
         Book book4 = new Book();
         book4.setTitle("It");
+        book4.setImageUrl("It.jpg");
         book4.setDescription( "A horror novel by Stephen King.");
         book4.setPrice(new BigDecimal("154.34"));
         book4.setInventory(bookInventories.get(2));
@@ -82,9 +92,12 @@ public class TestData {
                 .filter(author -> author.getName().contains("Stephen King"))
                 .collect(Collectors.toSet()));
         book4.setCategory(categories.get(2));
+        book4.setIsbn("9780747538907");
+        book4.setPublicationYear(2009);
 
         Book book5 = new Book();
         book5.setTitle("It");
+        book5.setImageUrl("It.jpg");
         book5.setDescription( "A horror novel by Stephen King.");
         book5.setPrice(new BigDecimal("154.34"));
         book5.setInventory(bookInventories.get(2));
@@ -92,6 +105,8 @@ public class TestData {
                 .filter(author -> author.getName().contains("Stephen King"))
                 .collect(Collectors.toSet()));
         book5.setCategory(categories.get(2));
+        book5.setIsbn("9780747535748");
+        book5.setPublicationYear(2012);
 
         bookRepository.save(book1);
         bookRepository.save(book2);

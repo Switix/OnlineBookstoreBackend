@@ -29,6 +29,15 @@ public class Book {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
+    @Column(nullable = false)
+    private String imageUrl;
+
+    @Column(nullable = false)
+    private int publicationYear;
+
+    @Column(nullable = false)
+    private String isbn;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
