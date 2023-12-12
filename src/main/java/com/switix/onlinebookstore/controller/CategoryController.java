@@ -4,13 +4,15 @@ import com.switix.onlinebookstore.dto.CategoryBookCountDto;
 import com.switix.onlinebookstore.model.Category;
 import com.switix.onlinebookstore.repository.CategoryRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/categories")
-@CrossOrigin(origins = "http://localhost:8081")
 public class CategoryController {
 
     private final CategoryRepository categoryRepository;

@@ -5,13 +5,15 @@ import com.switix.onlinebookstore.dto.AuthorBookCountDto;
 import com.switix.onlinebookstore.dto.SearchDto;
 import com.switix.onlinebookstore.repository.CategoryRepository;
 import com.switix.onlinebookstore.service.AuthorService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/search")
-@CrossOrigin(origins = "http://localhost:8081")
 public class SearchController {
 
     private final AuthorService authorService;
