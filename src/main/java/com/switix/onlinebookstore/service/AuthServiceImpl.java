@@ -47,7 +47,8 @@ public class AuthServiceImpl implements AuthService {
         });
 
         AppUser appUser = new AppUser();
-        appUser.setUsername(registerDto.getUsername());
+        appUser.setName(registerDto.getName());
+        appUser.setLastname(registerDto.getLastname());
         appUser.setPassword(passwordEncoder.encode((registerDto.getPassword())));
         appUser.setEmail(registerDto.getEmail());
 
@@ -57,7 +58,8 @@ public class AuthServiceImpl implements AuthService {
 
         AppUserDto appUserDto = new AppUserDto();
         appUserDto.setEmail(savedUser.getEmail());
-        appUserDto.setUsername(savedUser.getUsername());
+        appUserDto.setName(savedUser.getName());
+        appUserDto.setLastname(savedUser.getLastname());
         appUserDto.setRole(savedUser.getRole().getName());
         appUserDto.setId(savedUser.getId());
         return appUserDto;
@@ -77,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
 
 
             AppUser appUser = (AppUser) authentication.getPrincipal();
-            return new AppUserDto(appUser.getId(), appUser.getUsername(), appUser.getEmail(), appUser.getRole().getName());
+            return new AppUserDto(appUser.getId(), appUser.getName(),appUser.getLastname(), appUser.getEmail(), appUser.getRole().getName());
 
         } catch (BadCredentialsException e) {
             throw new Exception("Bad credentials", e);

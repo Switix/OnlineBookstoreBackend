@@ -23,7 +23,10 @@ public class AppUser implements UserDetails {
     private Long id;
 
     @Column(nullable = false)
-    private String username;
+    private String name;
+
+    @Column(nullable = false)
+    private String lastname;
 
     @Column(nullable = false)
     private String password;
@@ -38,6 +41,11 @@ public class AppUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority(role.getName()));
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
     }
 
     @Override

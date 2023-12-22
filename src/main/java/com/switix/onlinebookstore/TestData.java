@@ -167,7 +167,8 @@ public class TestData {
         AppUser user = new AppUser();
         user.setEmail("user@example.com");
         user.setPassword(passwordEncoder.encode("user"));
-        user.setUsername("user");
+        user.setName("Maciej");
+        user.setLastname("Świtalski");
         user.setRole(role);
 
         appUserRepository.save(user);
