@@ -1,5 +1,6 @@
 package com.switix.onlinebookstore.service;
 
+import com.switix.onlinebookstore.dto.AppUserChangePasswordDto;
 import com.switix.onlinebookstore.dto.AppUserDto;
 import com.switix.onlinebookstore.dto.UpdateAppUserProfileDto;
 import com.switix.onlinebookstore.exception.InvalidPasswordException;
@@ -7,8 +8,6 @@ import com.switix.onlinebookstore.model.AppUser;
 import com.switix.onlinebookstore.repository.AppUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AppUserServiceImpl implements AppUserService {
@@ -49,5 +48,17 @@ public class AppUserServiceImpl implements AppUserService {
         appUserDto.setId(updatedUser.getId());
 
         return appUserDto;
+    }
+
+    @Override
+    public void changeAppUserPassword(AppUser authenticatedUser, AppUserChangePasswordDto appUserChangePasswordDto) {
+        if (!passwordEncoder.matches(appUserChangePasswordDto.getPassword(), authenticatedUser.getPassword())) {
+            throw new InvalidPasswordException("Incorrect password");
+        }
+        String newPasswordEncoded = passwordEncoder.encode(appUserChangePasswordDto.getNewPassword());
+        authenticatedUser.setPassword(newPasswordEncoded);
+
+        userRepository.save(authenticatedUser);
+
     }
 }

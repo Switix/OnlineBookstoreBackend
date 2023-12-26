@@ -1,7 +1,7 @@
 package com.switix.onlinebookstore.controller;
 
+import com.switix.onlinebookstore.dto.AppUserChangePasswordDto;
 import com.switix.onlinebookstore.dto.AppUserDto;
-
 import com.switix.onlinebookstore.dto.UpdateAppUserProfileDto;
 import com.switix.onlinebookstore.exception.InvalidPasswordException;
 import com.switix.onlinebookstore.model.AppUser;
@@ -10,7 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -37,6 +40,28 @@ public class AppUserController {
 
             AppUserDto updatedUser = userService.updateUser(authenticatedUser, updateAppUserProfileDto);
             return ResponseEntity.ok(updatedUser);
+
+        } catch (InvalidPasswordException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Password is incorrect", e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Server error", e);
+        }
+    }
+    @PatchMapping("/changePassword")
+    public ResponseEntity<Void> ChangePassword(Authentication authentication,
+                                                    @RequestBody AppUserChangePasswordDto appUserChangePasswordDto) {
+
+        if (authentication instanceof AnonymousAuthenticationToken || authentication ==null) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED, "User is not authorized");
+        }
+        try {
+            AppUser authenticatedUser = (AppUser) authentication.getPrincipal();
+
+            userService.changeAppUserPassword(authenticatedUser, appUserChangePasswordDto);
+            return ResponseEntity.noContent().build();
 
         } catch (InvalidPasswordException e) {
             throw new ResponseStatusException(
