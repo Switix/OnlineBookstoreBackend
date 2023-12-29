@@ -1,14 +1,13 @@
 package com.switix.onlinebookstore.controller;
 
-import com.switix.onlinebookstore.dto.AppUserChangePasswordDto;
-import com.switix.onlinebookstore.dto.AppUserDto;
-import com.switix.onlinebookstore.dto.ChangeBillingAddressDto;
-import com.switix.onlinebookstore.dto.UpdateAppUserProfileDto;
+import com.switix.onlinebookstore.dto.*;
 import com.switix.onlinebookstore.exception.CityNotFoundException;
 import com.switix.onlinebookstore.exception.CountryNotFoundException;
 import com.switix.onlinebookstore.exception.InvalidPasswordException;
+import com.switix.onlinebookstore.exception.ShippingAddressNotFoundException;
 import com.switix.onlinebookstore.model.AppUser;
 import com.switix.onlinebookstore.model.BillingAddress;
+import com.switix.onlinebookstore.model.ShippingAddress;
 import com.switix.onlinebookstore.service.AppUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,6 +76,21 @@ public class AppUserController {
             return ResponseEntity.ok(newBillingAddress);
 
         } catch (CityNotFoundException | CountryNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @PatchMapping("/shippingAddressChange")
+    public ResponseEntity<ShippingAddress> changeShippingAddress(Authentication authentication,
+                                                               @RequestBody ChangeShippingAddressDto changeShippingAddressDto) {
+        try {
+            AppUser authenticatedUser = (AppUser) authentication.getPrincipal();
+
+            ShippingAddress newShippingAddress = userService.changeShippingAddress(authenticatedUser, changeShippingAddressDto);
+            return ResponseEntity.ok(newShippingAddress);
+
+        } catch (CityNotFoundException | CountryNotFoundException | ShippingAddressNotFoundException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, e.getMessage(), e);
         }

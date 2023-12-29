@@ -1,11 +1,9 @@
 package com.switix.onlinebookstore.service;
 
-import com.switix.onlinebookstore.dto.AppUserChangePasswordDto;
-import com.switix.onlinebookstore.dto.AppUserDto;
-import com.switix.onlinebookstore.dto.ChangeBillingAddressDto;
-import com.switix.onlinebookstore.dto.UpdateAppUserProfileDto;
+import com.switix.onlinebookstore.dto.*;
 import com.switix.onlinebookstore.model.AppUser;
 import com.switix.onlinebookstore.model.BillingAddress;
+import com.switix.onlinebookstore.model.ShippingAddress;
 
 public interface AppUserService {
     AppUserDto updateUser(AppUser authenticatedUser, UpdateAppUserProfileDto updateAppUserProfileDto);
@@ -13,4 +11,6 @@ public interface AppUserService {
     void changeAppUserPassword(AppUser authenticatedUser, AppUserChangePasswordDto appUserChangePasswordDto);
 
     BillingAddress changeBillingAddress(AppUser authenticatedUser, ChangeBillingAddressDto changeBillingAddressDto);
+
+    ShippingAddress changeShippingAddress(AppUser authenticatedUser, ChangeShippingAddressDto changeShippingAddressDto);
 }

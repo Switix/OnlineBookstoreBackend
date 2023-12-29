@@ -27,8 +27,9 @@ public class TestData {
     private final CityRepository cityRepository;
     private final CountryRepository countryRepository;
     private final BillingAddressRepository billingAddressRepository;
+    private final ShippingAddressRepository shippingAddressRepository;
 
-    public TestData(AppUserRepository appUserRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthorRepository authorRepository, CategoryRepository categoryRepository, BookInventoryRepository bookInventoryRepository, BookRepository bookRepository, CityRepository cityRepository, CountryRepository countryRepository, BillingAddressRepository billingAddressRepository) {
+    public TestData(AppUserRepository appUserRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthorRepository authorRepository, CategoryRepository categoryRepository, BookInventoryRepository bookInventoryRepository, BookRepository bookRepository, CityRepository cityRepository, CountryRepository countryRepository, BillingAddressRepository billingAddressRepository, ShippingAddressRepository shippingAddressRepository) {
         this.appUserRepository = appUserRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -39,12 +40,14 @@ public class TestData {
         this.cityRepository = cityRepository;
         this.countryRepository = countryRepository;
         this.billingAddressRepository = billingAddressRepository;
+        this.shippingAddressRepository = shippingAddressRepository;
 
         roleTestData();
         populateCityTable();
         countryTestData();
         billingAddressTestData();
         appUserTestData();
+        shippingAddressTestData();
         authorTestData();
         categoryTestData();
         bookInventoryTestData();
@@ -54,6 +57,7 @@ public class TestData {
     private void billingAddressTestData() {
         Country country = countryRepository.findByCountryName("Polska").get();
         City city = cityRepository.findByCityName("Nakło nad Notecią").get();
+
 
         BillingAddress billingAddress = new BillingAddress();
         billingAddress.setCity(city);
@@ -65,6 +69,23 @@ public class TestData {
         billingAddress.setApartmentNumber("3");
 
         billingAddressRepository.save(billingAddress);
+    }
+    private void shippingAddressTestData() {
+        Country country = countryRepository.findByCountryName("Polska").get();
+        City city = cityRepository.findByCityName("Nakło nad Notecią").get();
+        AppUser appUser = appUserRepository.findByEmail("user@example.com").get();
+
+        ShippingAddress shippingAddress = new ShippingAddress();
+        shippingAddress.setCity(city);
+        shippingAddress.setCountry(country);
+        shippingAddress.setName("dom");
+        shippingAddress.setStreet("Nowa");
+        shippingAddress.setBuildingNumber("35");
+        shippingAddress.setZipCode("89-100");
+        shippingAddress.setApartmentNumber("3");
+        shippingAddress.setAppUser(appUser);
+
+        shippingAddressRepository.save(shippingAddress);
     }
 
     private void countryTestData() {
@@ -207,6 +228,7 @@ public class TestData {
         user.setLastname("Świtalski");
         user.setRole(role);
         user.setBillingAddress(billingAddress);
+
 
         AppUser user2 = new AppUser();
         user2.setEmail("macie789@wp.pl");

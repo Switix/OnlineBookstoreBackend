@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Getter
 @Setter
@@ -41,6 +42,10 @@ public class AppUser implements UserDetails {
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "billing_address_id", unique = true)
     private BillingAddress billingAddress;
+
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
+    private List<ShippingAddress> shippingAddresses;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -80,7 +80,13 @@ public class AuthServiceImpl implements AuthService {
 
 
             AppUser appUser = (AppUser) authentication.getPrincipal();
-            return new AppUserDto(appUser.getId(), appUser.getName(),appUser.getLastname(), appUser.getEmail(), appUser.getRole().getName(),appUser.getBillingAddress());
+            return new AppUserDto(appUser.getId(),
+                    appUser.getName(),
+                    appUser.getLastname(),
+                    appUser.getEmail(),
+                    appUser.getRole().getName(),
+                    appUser.getBillingAddress(),
+                    appUser.getShippingAddresses());
 
         } catch (BadCredentialsException e) {
             throw new Exception("Bad credentials", e);
