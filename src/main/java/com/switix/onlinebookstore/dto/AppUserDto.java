@@ -1,5 +1,6 @@
 package com.switix.onlinebookstore.dto;
 
+import com.switix.onlinebookstore.model.BillingAddress;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,5 @@ public class AppUserDto {
     private String lastname;
     private String email;
     private String role;
+    private BillingAddress billingAddress;
 }

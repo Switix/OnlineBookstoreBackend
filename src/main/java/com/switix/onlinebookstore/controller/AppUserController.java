@@ -2,13 +2,16 @@ package com.switix.onlinebookstore.controller;
 
 import com.switix.onlinebookstore.dto.AppUserChangePasswordDto;
 import com.switix.onlinebookstore.dto.AppUserDto;
+import com.switix.onlinebookstore.dto.ChangeBillingAddressDto;
 import com.switix.onlinebookstore.dto.UpdateAppUserProfileDto;
+import com.switix.onlinebookstore.exception.CityNotFoundException;
+import com.switix.onlinebookstore.exception.CountryNotFoundException;
 import com.switix.onlinebookstore.exception.InvalidPasswordException;
 import com.switix.onlinebookstore.model.AppUser;
+import com.switix.onlinebookstore.model.BillingAddress;
 import com.switix.onlinebookstore.service.AppUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,10 +34,6 @@ public class AppUserController {
     public ResponseEntity<AppUserDto> updateProfile(Authentication authentication,
                                                     @RequestBody UpdateAppUserProfileDto updateAppUserProfileDto) {
 
-        if (authentication instanceof AnonymousAuthenticationToken || authentication ==null) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED, "User is not authorized");
-        }
         try {
             AppUser authenticatedUser = (AppUser) authentication.getPrincipal();
 
@@ -49,14 +48,10 @@ public class AppUserController {
                     HttpStatus.INTERNAL_SERVER_ERROR, "Server error", e);
         }
     }
+
     @PatchMapping("/changePassword")
     public ResponseEntity<Void> ChangePassword(Authentication authentication,
-                                                    @RequestBody AppUserChangePasswordDto appUserChangePasswordDto) {
-
-        if (authentication instanceof AnonymousAuthenticationToken || authentication ==null) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED, "User is not authorized");
-        }
+                                               @RequestBody AppUserChangePasswordDto appUserChangePasswordDto) {
         try {
             AppUser authenticatedUser = (AppUser) authentication.getPrincipal();
 
@@ -69,6 +64,21 @@ public class AppUserController {
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Server error", e);
+        }
+    }
+
+    @PatchMapping("/billingAddressChange")
+    public ResponseEntity<BillingAddress> changeBillingAddress(Authentication authentication,
+                                                               @RequestBody ChangeBillingAddressDto changeBillingAddressDto) {
+        try {
+            AppUser authenticatedUser = (AppUser) authentication.getPrincipal();
+
+            BillingAddress newBillingAddress = userService.changeBillingAddress(authenticatedUser, changeBillingAddressDto);
+            return ResponseEntity.ok(newBillingAddress);
+
+        } catch (CityNotFoundException | CountryNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
 }

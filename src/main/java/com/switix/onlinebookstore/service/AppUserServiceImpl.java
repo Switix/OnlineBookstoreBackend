@@ -2,10 +2,18 @@ package com.switix.onlinebookstore.service;
 
 import com.switix.onlinebookstore.dto.AppUserChangePasswordDto;
 import com.switix.onlinebookstore.dto.AppUserDto;
+import com.switix.onlinebookstore.dto.ChangeBillingAddressDto;
 import com.switix.onlinebookstore.dto.UpdateAppUserProfileDto;
+import com.switix.onlinebookstore.exception.CityNotFoundException;
+import com.switix.onlinebookstore.exception.CountryNotFoundException;
 import com.switix.onlinebookstore.exception.InvalidPasswordException;
 import com.switix.onlinebookstore.model.AppUser;
+import com.switix.onlinebookstore.model.BillingAddress;
+import com.switix.onlinebookstore.model.City;
+import com.switix.onlinebookstore.model.Country;
 import com.switix.onlinebookstore.repository.AppUserRepository;
+import com.switix.onlinebookstore.repository.CityRepository;
+import com.switix.onlinebookstore.repository.CountryRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +22,14 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CityRepository cityRepository;
+    private final CountryRepository countryRepository;
 
-    public AppUserServiceImpl(AppUserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AppUserServiceImpl(AppUserRepository userRepository, PasswordEncoder passwordEncoder, CityRepository cityRepository, CountryRepository countryRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.cityRepository = cityRepository;
+        this.countryRepository = countryRepository;
     }
 
     @Override
@@ -46,6 +58,7 @@ public class AppUserServiceImpl implements AppUserService {
         appUserDto.setLastname(updatedUser.getLastname());
         appUserDto.setRole(updatedUser.getRole().getName());
         appUserDto.setId(updatedUser.getId());
+        appUserDto.setBillingAddress(updatedUser.getBillingAddress());
 
         return appUserDto;
     }
@@ -60,5 +73,34 @@ public class AppUserServiceImpl implements AppUserService {
 
         userRepository.save(authenticatedUser);
 
+    }
+
+    @Override
+    public BillingAddress changeBillingAddress(AppUser authenticatedUser, ChangeBillingAddressDto changeBillingAddressDto) {
+        Country country = countryRepository.findById(changeBillingAddressDto.getCountryId())
+                .orElseThrow(() -> new CountryNotFoundException("Country not found"));
+
+        City city = cityRepository.findById(changeBillingAddressDto.getCityId())
+                .orElseThrow(() -> new CityNotFoundException("City not found"));
+
+
+        BillingAddress billingAddress = authenticatedUser.getBillingAddress();
+        if (billingAddress == null) {
+            billingAddress = new BillingAddress();
+            authenticatedUser.setBillingAddress(billingAddress);
+        }
+
+        billingAddress.setApartmentNumber(changeBillingAddressDto.getApartmentNumber());
+        billingAddress.setBuildingNumber(changeBillingAddressDto.getBuildingNumber());
+        billingAddress.setZipCode(changeBillingAddressDto.getZipCode());
+        billingAddress.setStreet(changeBillingAddressDto.getStreet());
+        billingAddress.setCountry(country);
+        billingAddress.setCity(city);
+        billingAddress.setPhoneNumber(changeBillingAddressDto.getPhoneNumber());
+
+
+        AppUser updatedUser = userRepository.save(authenticatedUser);
+
+        return updatedUser.getBillingAddress();
     }
 }

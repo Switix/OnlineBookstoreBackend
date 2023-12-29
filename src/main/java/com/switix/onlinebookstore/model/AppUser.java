@@ -38,6 +38,10 @@ public class AppUser implements UserDetails {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "billing_address_id", unique = true)
+    private BillingAddress billingAddress;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority(role.getName()));
