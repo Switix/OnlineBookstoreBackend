@@ -3,6 +3,7 @@ package com.switix.onlinebookstore.security;
 import com.switix.onlinebookstore.service.AppUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -33,6 +34,7 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
+                                .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                                 .requestMatchers("api/user/**").hasRole("CUSTOMER")
                                 //.anyRequest().hasRole("CUSTOMER")
                                 .anyRequest().permitAll()
