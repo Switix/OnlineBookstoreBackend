@@ -13,4 +13,6 @@ public interface AppUserService {
     BillingAddress changeBillingAddress(AppUser authenticatedUser, ChangeBillingAddressDto changeBillingAddressDto);
 
     ShippingAddress changeShippingAddress(AppUser authenticatedUser, ChangeShippingAddressDto changeShippingAddressDto);
+
+    ShippingAddress createShippingAddress(AppUser authenticatedUser, ChangeShippingAddressDto changeShippingAddressDto);
 }

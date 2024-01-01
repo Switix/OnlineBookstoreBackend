@@ -127,4 +127,29 @@ public class AppUserServiceImpl implements AppUserService {
         return shippingAddressRepository.save(shippingAddress);
 
     }
+
+    @Override
+    public ShippingAddress createShippingAddress(AppUser authenticatedUser, ChangeShippingAddressDto changeShippingAddressDto) {
+        Country country = countryRepository.findById(changeShippingAddressDto.getCountryId())
+                .orElseThrow(() -> new CountryNotFoundException("Country not found"));
+
+        City city = cityRepository.findById(changeShippingAddressDto.getCityId())
+                .orElseThrow(() -> new CityNotFoundException("City not found"));
+
+        ShippingAddress shippingAddress = new ShippingAddress();
+
+        shippingAddress.setAppUser(authenticatedUser);
+
+        shippingAddress.setApartmentNumber(changeShippingAddressDto.getApartmentNumber());
+        shippingAddress.setBuildingNumber(changeShippingAddressDto.getBuildingNumber());
+        shippingAddress.setZipCode(changeShippingAddressDto.getZipCode());
+        shippingAddress.setStreet(changeShippingAddressDto.getStreet());
+        shippingAddress.setCountry(country);
+        shippingAddress.setCity(city);
+        shippingAddress.setName(changeShippingAddressDto.getName());
+
+
+        return shippingAddressRepository.save(shippingAddress);
+
+    }
 }

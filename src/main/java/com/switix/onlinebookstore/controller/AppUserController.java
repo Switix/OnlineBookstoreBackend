@@ -12,10 +12,7 @@ import com.switix.onlinebookstore.service.AppUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -76,6 +73,21 @@ public class AppUserController {
             return ResponseEntity.ok(newBillingAddress);
 
         } catch (CityNotFoundException | CountryNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @PostMapping("/shippingAddress")
+    public ResponseEntity<ShippingAddress> createShippingAddress(Authentication authentication,
+                                                                 @RequestBody ChangeShippingAddressDto changeShippingAddressDto) {
+        try {
+            AppUser authenticatedUser = (AppUser) authentication.getPrincipal();
+
+            ShippingAddress newShippingAddress = userService.createShippingAddress(authenticatedUser, changeShippingAddressDto);
+            return ResponseEntity.ok(newShippingAddress);
+
+        } catch (CityNotFoundException | CountryNotFoundException | ShippingAddressNotFoundException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, e.getMessage(), e);
         }

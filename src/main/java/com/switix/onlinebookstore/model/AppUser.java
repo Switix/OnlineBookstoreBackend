@@ -43,7 +43,7 @@ public class AppUser implements UserDetails {
     @JoinColumn(name = "billing_address_id", unique = true)
     private BillingAddress billingAddress;
 
-    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "appUser")
     private List<ShippingAddress> shippingAddresses;
 
 
