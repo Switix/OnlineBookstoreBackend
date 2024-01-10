@@ -20,8 +20,8 @@ public class CartItem {
     @JoinColumn(name = "shopping_session_id", nullable = false)
     private ShoppingSession shoppingSession;
 
-    @OneToOne
-    @JoinColumn(name = "book_id" , nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
     @Column(nullable = false)

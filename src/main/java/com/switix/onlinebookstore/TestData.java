@@ -28,8 +28,10 @@ public class TestData {
     private final CountryRepository countryRepository;
     private final BillingAddressRepository billingAddressRepository;
     private final ShippingAddressRepository shippingAddressRepository;
+    private final ShoppingSessionRepository shoppingSessionRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public TestData(AppUserRepository appUserRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthorRepository authorRepository, CategoryRepository categoryRepository, BookInventoryRepository bookInventoryRepository, BookRepository bookRepository, CityRepository cityRepository, CountryRepository countryRepository, BillingAddressRepository billingAddressRepository, ShippingAddressRepository shippingAddressRepository) {
+    public TestData(AppUserRepository appUserRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthorRepository authorRepository, CategoryRepository categoryRepository, BookInventoryRepository bookInventoryRepository, BookRepository bookRepository, CityRepository cityRepository, CountryRepository countryRepository, BillingAddressRepository billingAddressRepository, ShippingAddressRepository shippingAddressRepository, ShoppingSessionRepository shoppingSessionRepository, CartItemRepository cartItemRepository) {
         this.appUserRepository = appUserRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -41,17 +43,64 @@ public class TestData {
         this.countryRepository = countryRepository;
         this.billingAddressRepository = billingAddressRepository;
         this.shippingAddressRepository = shippingAddressRepository;
+        this.shoppingSessionRepository = shoppingSessionRepository;
+        this.cartItemRepository = cartItemRepository;
 
+        authorTestData();
+        categoryTestData();
+        bookInventoryTestData();
+        bookTestData();
         roleTestData();
         populateCityTable();
         countryTestData();
         billingAddressTestData();
         appUserTestData();
+        shoppingSessionTestData();
+        cartItemTestData();
         shippingAddressTestData();
-        authorTestData();
-        categoryTestData();
-        bookInventoryTestData();
-        bookTestData();
+
+    }
+
+    private void cartItemTestData() {
+        List<Book> books = bookRepository.findAll();
+        ShoppingSession shoppingSessionWithItems = shoppingSessionRepository.findById(2L).get();
+
+        CartItem cartItem = new CartItem();
+        cartItem.setBook(books.get(0));
+        cartItem.setQuantity(1);
+        cartItem.setShoppingSession(shoppingSessionWithItems);
+
+        CartItem cartItem1 = new CartItem();
+        cartItem1.setBook(books.get(1));
+        cartItem1.setQuantity(2);
+        cartItem1.setShoppingSession(shoppingSessionWithItems);
+
+        BigDecimal total = cartItem.getBook().getPrice()
+                .multiply(BigDecimal.valueOf(cartItem.getQuantity()))
+                .add(cartItem1.getBook().getPrice()
+                        .multiply(BigDecimal.valueOf(cartItem1.getQuantity())));
+        shoppingSessionWithItems.setTotal(total);
+
+        shoppingSessionRepository.save(shoppingSessionWithItems);
+        cartItemRepository.save(cartItem);
+        cartItemRepository.save(cartItem1);
+    }
+
+    private void shoppingSessionTestData() {
+        AppUser userWithCartItems = appUserRepository.findByEmail("user@example.com").get();
+        AppUser userWithoutCartItems = appUserRepository.findByEmail("macie789@wp.pl").get();
+
+        ShoppingSession shoppingSession = new ShoppingSession();
+        shoppingSession.setTotal(BigDecimal.ZERO);
+        shoppingSession.setAppUser(userWithoutCartItems);
+
+        ShoppingSession shoppingSession1 = new ShoppingSession();
+        shoppingSession1.setTotal(BigDecimal.ZERO);
+        shoppingSession1.setAppUser(userWithCartItems);
+
+        shoppingSessionRepository.save(shoppingSession);
+        shoppingSessionRepository.save(shoppingSession1);
+
     }
 
     private void billingAddressTestData() {

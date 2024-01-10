@@ -46,6 +46,9 @@ public class AppUser implements UserDetails {
     @OneToMany(mappedBy = "appUser")
     private List<ShippingAddress> shippingAddresses;
 
+    @OneToOne(mappedBy="appUser")
+    private ShoppingSession shoppingSession;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

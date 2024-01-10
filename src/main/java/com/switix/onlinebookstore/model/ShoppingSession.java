@@ -19,7 +19,7 @@ public class ShoppingSession {
     private Long id;
 
     @OneToOne
-    @Column(nullable = false)
+    @JoinColumn(name = "app_user_id",nullable = false)
     private AppUser appUser;
 
     @Column(nullable = false)
