@@ -36,6 +36,7 @@ public class SecurityConfig {
                         authorizeHttpRequests
                                 .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                                 .requestMatchers("api/user/**").hasRole("CUSTOMER")
+                                .requestMatchers("api/shopping/**").hasRole("CUSTOMER")
                                 //.anyRequest().hasRole("CUSTOMER")
                                 .anyRequest().permitAll()
                 )

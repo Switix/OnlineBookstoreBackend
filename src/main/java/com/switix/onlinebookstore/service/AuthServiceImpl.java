@@ -5,8 +5,10 @@ import com.switix.onlinebookstore.dto.RegisterDto;
 import com.switix.onlinebookstore.exception.EmailAlreadyExistsException;
 import com.switix.onlinebookstore.model.AppUser;
 import com.switix.onlinebookstore.model.Role;
+import com.switix.onlinebookstore.model.ShoppingSession;
 import com.switix.onlinebookstore.repository.AppUserRepository;
 import com.switix.onlinebookstore.repository.RoleRepository;
+import com.switix.onlinebookstore.repository.ShoppingSessionRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,20 +24,24 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class AuthServiceImpl implements AuthService {
 
     private final PasswordEncoder passwordEncoder;
     private final AppUserRepository appUserRepository;
     private final RoleRepository roleRepository;
+    private final ShoppingSessionRepository shoppingSessionRepository;
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
     private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
 
-    public AuthServiceImpl(PasswordEncoder passwordEncoder, AppUserRepository appUserRepository, RoleRepository roleRepository, AuthenticationManager authenticationManager) {
+    public AuthServiceImpl(PasswordEncoder passwordEncoder, AppUserRepository appUserRepository, RoleRepository roleRepository, ShoppingSessionRepository shoppingSessionRepository, AuthenticationManager authenticationManager) {
         this.passwordEncoder = passwordEncoder;
         this.appUserRepository = appUserRepository;
         this.roleRepository = roleRepository;
+        this.shoppingSessionRepository = shoppingSessionRepository;
         this.authenticationManager = authenticationManager;
     }
 
@@ -46,6 +52,7 @@ public class AuthServiceImpl implements AuthService {
             throw new EmailAlreadyExistsException("Email already exists: " + email);
         });
 
+
         AppUser appUser = new AppUser();
         appUser.setName(registerDto.getName());
         appUser.setLastname(registerDto.getLastname());
@@ -55,6 +62,13 @@ public class AuthServiceImpl implements AuthService {
         Role role = roleRepository.findByName("ROLE_CUSTOMER").get();
         appUser.setRole(role);
         AppUser savedUser = appUserRepository.save(appUser);
+
+        ShoppingSession shoppingSession = new ShoppingSession();
+        shoppingSession.setTotal(BigDecimal.ZERO);
+        shoppingSession.setAppUser(savedUser);
+        shoppingSessionRepository.save(shoppingSession);
+
+
 
         AppUserDto appUserDto = new AppUserDto();
         appUserDto.setEmail(savedUser.getEmail());
