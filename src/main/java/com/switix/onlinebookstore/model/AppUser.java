@@ -39,8 +39,7 @@ public class AppUser implements UserDetails {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "billing_address_id", unique = true)
+    @OneToOne(mappedBy = "appUser")
     private BillingAddress billingAddress;
 
     @OneToMany(mappedBy = "appUser")
