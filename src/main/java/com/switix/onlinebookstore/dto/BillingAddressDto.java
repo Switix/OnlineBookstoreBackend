@@ -1,6 +1,5 @@
 package com.switix.onlinebookstore.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChangeShippingAddressDto {
+public class BillingAddressDto {
     private Long id;
-    private String name;
+    private String phoneNumber;
     private Long cityId;
     private String street;
     private String apartmentNumber;

@@ -13,4 +13,5 @@ public interface ShoppingService {
     void updateCartItem(Long cartItemId,CartItemRequestDto cartItemRequestDto);
     void deleteCartItem(Long cartItemId);
     BigDecimal getShoppingCartTotal(Long shoppingSessionId);
+    void deleteAllCartItems(List<Long> cartItemIds);
 }

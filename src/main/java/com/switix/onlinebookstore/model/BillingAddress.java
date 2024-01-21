@@ -1,8 +1,7 @@
 package com.switix.onlinebookstore.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,5 +15,10 @@ public class BillingAddress extends Address {
 
     @Column( nullable = false)
     private String phoneNumber;
+
+    @OneToOne()
+    @JoinColumn(name = "app_user_id", unique = true)
+    @JsonIgnore
+    private AppUser appUser;
 
 }

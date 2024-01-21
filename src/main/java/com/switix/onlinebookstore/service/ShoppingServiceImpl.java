@@ -90,6 +90,10 @@ public class ShoppingServiceImpl implements ShoppingService {
                 .getTotal();
     }
 
+    public void deleteAllCartItems(List<Long> cartItemIds){
+        cartItemRepository.deleteAllById(cartItemIds);
+    }
+
     private CartItemDto mapToCartItemDto(CartItem cartItem) {
         CartItemDto cartItemDto = new CartItemDto();
         cartItemDto.setId(cartItem.getId());
@@ -99,7 +103,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         return cartItemDto;
     }
 
-    private void calculateShoppingCartTotal(ShoppingSession shoppingSession) {
+    public void calculateShoppingCartTotal(ShoppingSession shoppingSession) {
 
         List<CartItem> cartItems = cartItemRepository.findAllByShoppingSession_IdOrderById(shoppingSession.getId());
 

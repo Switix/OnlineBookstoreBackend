@@ -53,8 +53,8 @@ public class TestData {
         roleTestData();
         populateCityTable();
         countryTestData();
-        billingAddressTestData();
         appUserTestData();
+        billingAddressTestData();
         shoppingSessionTestData();
         cartItemTestData();
         shippingAddressTestData();
@@ -71,7 +71,7 @@ public class TestData {
         cartItem.setShoppingSession(shoppingSessionWithItems);
 
         CartItem cartItem1 = new CartItem();
-        cartItem1.setBook(books.get(1));
+        cartItem1.setBook(books.get(2));
         cartItem1.setQuantity(2);
         cartItem1.setShoppingSession(shoppingSessionWithItems);
 
@@ -106,6 +106,7 @@ public class TestData {
     private void billingAddressTestData() {
         Country country = countryRepository.findByCountryName("Polska").get();
         City city = cityRepository.findByCityName("Nakło nad Notecią").get();
+        AppUser appUser = appUserRepository.findByEmail("user@example.com").get();
 
 
         BillingAddress billingAddress = new BillingAddress();
@@ -116,6 +117,7 @@ public class TestData {
         billingAddress.setBuildingNumber("35");
         billingAddress.setZipCode("89-100");
         billingAddress.setApartmentNumber("3");
+        billingAddress.setAppUser(appUser);
 
         billingAddressRepository.save(billingAddress);
     }
@@ -268,7 +270,6 @@ public class TestData {
 
     private void appUserTestData() {
         Role role = roleRepository.findByName("ROLE_CUSTOMER").get();
-        BillingAddress billingAddress = billingAddressRepository.findById(1L).get();
 
         AppUser user = new AppUser();
         user.setEmail("user@example.com");
@@ -276,7 +277,6 @@ public class TestData {
         user.setName("Maciej");
         user.setLastname("Świtalski");
         user.setRole(role);
-        user.setBillingAddress(billingAddress);
 
 
         AppUser user2 = new AppUser();
