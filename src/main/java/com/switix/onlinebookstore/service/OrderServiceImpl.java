@@ -9,9 +9,7 @@ import com.switix.onlinebookstore.exception.EmptyShoppingCartException;
 import com.switix.onlinebookstore.exception.OrderDetailNotFoundException;
 import com.switix.onlinebookstore.exception.ShoppingSessionNotFoundException;
 import com.switix.onlinebookstore.model.*;
-import com.switix.onlinebookstore.repository.OrderDetailRepository;
-import com.switix.onlinebookstore.repository.OrderItemRepository;
-import com.switix.onlinebookstore.repository.ShoppingSessionRepository;
+import com.switix.onlinebookstore.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +24,18 @@ public class OrderServiceImpl implements OrderService {
     private final ShoppingSessionRepository shoppingSessionRepository;
     private final ShippingAddressService shippingAddressService;
     private final BillingAddressService billingAddressService;
+    private final PayMethodRepository payMethodRepository;
+    private final ShipmentMethodRepository shipmentMethodRepository;
 
-    public OrderServiceImpl(OrderDetailRepository orderDetailRepository, OrderItemRepository orderItemRepository, ShoppingService shoppingService, ShoppingSessionRepository shoppingSessionRepository, ShippingAddressService shippingAddressService, BillingAddressService billingAddressService) {
+    public OrderServiceImpl(OrderDetailRepository orderDetailRepository, OrderItemRepository orderItemRepository, ShoppingService shoppingService, ShoppingSessionRepository shoppingSessionRepository, ShippingAddressService shippingAddressService, BillingAddressService billingAddressService, PayMethodRepository payMethodRepository, ShipmentMethodRepository shipmentMethodRepository) {
         this.orderDetailRepository = orderDetailRepository;
         this.orderItemRepository = orderItemRepository;
         this.shoppingService = shoppingService;
         this.shoppingSessionRepository = shoppingSessionRepository;
         this.shippingAddressService = shippingAddressService;
         this.billingAddressService = billingAddressService;
+        this.payMethodRepository = payMethodRepository;
+        this.shipmentMethodRepository = shipmentMethodRepository;
     }
 
     @Override
@@ -66,17 +68,12 @@ public class OrderServiceImpl implements OrderService {
         ShoppingSession shoppingSession = shoppingSessionRepository.findById(shoppingSessionId)
                 .orElseThrow(() -> new ShoppingSessionNotFoundException("Shopping session not found"));
 
-        //check if Billing Address is present
-        Long bId = orderDetailCreationDto.getBillingAddressDto().getId();
-        BillingAddress billingAddress = (bId == null)
-                ? billingAddressService.createBillingAddress(shoppingSession.getAppUser(), orderDetailCreationDto.getBillingAddressDto())
-                : billingAddressService.getBillingAddress(bId);
 
-        //check if Shipping Address is present
-        Long sId = orderDetailCreationDto.getShippingAddressDto().getId();
-        ShippingAddress shippingAddress = (sId == null)
-                ? shippingAddressService.createShippingAddress(shoppingSession.getAppUser(), orderDetailCreationDto.getShippingAddressDto())
-                : shippingAddressService.getShippingAddress(sId);
+        BillingAddress billingAddress = billingAddressService.getBillingAddress(orderDetailCreationDto.getBillingAddressId());
+        ShippingAddress shippingAddress =  shippingAddressService.getShippingAddress(orderDetailCreationDto.getShippingAddressId());
+
+        PayMethod payMethod = payMethodRepository.findById(orderDetailCreationDto.getPayMethodId()).get();
+        ShipmentMethod shipmentMethod = shipmentMethodRepository.findById(orderDetailCreationDto.getShipmentMethodId()).get();
 
         // check if the shopping cart is empty (no items no order)
         List<CartItemDto> cartItems = shoppingService.getCartItems(shoppingSessionId);
@@ -103,6 +100,8 @@ public class OrderServiceImpl implements OrderService {
         orderDetail.setAppUser(shoppingSession.getAppUser());
         orderDetail.setShippingAddress(shippingAddress);
         orderDetail.setBillingAddress(billingAddress);
+        orderDetail.setPayMethod(payMethod);
+        orderDetail.setShipmentMethod(shipmentMethod);
         List<OrderItem> orderItems = cartItems.stream()
                 .map(this::mapToOrderItem)
                 .toList();

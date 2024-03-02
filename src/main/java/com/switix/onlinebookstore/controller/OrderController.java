@@ -8,6 +8,10 @@ import com.switix.onlinebookstore.exception.EmptyShoppingCartException;
 import com.switix.onlinebookstore.exception.OrderDetailNotFoundException;
 import com.switix.onlinebookstore.model.AppUser;
 import com.switix.onlinebookstore.model.OrderDetail;
+import com.switix.onlinebookstore.model.PayMethod;
+import com.switix.onlinebookstore.model.ShipmentMethod;
+import com.switix.onlinebookstore.repository.PayMethodRepository;
+import com.switix.onlinebookstore.repository.ShipmentMethodRepository;
 import com.switix.onlinebookstore.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +27,13 @@ import java.util.List;
 @RestController
 public class OrderController {
     private final OrderService orderService;
+    private final PayMethodRepository payMethodRepository;
+    private final ShipmentMethodRepository shipmentMethodRepository;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, PayMethodRepository payMethodRepository, ShipmentMethodRepository shipmentMethodRepository) {
         this.orderService = orderService;
+        this.payMethodRepository = payMethodRepository;
+        this.shipmentMethodRepository = shipmentMethodRepository;
     }
 
     @GetMapping("/{orderDetailId}")
@@ -62,6 +70,15 @@ public class OrderController {
         catch (BookInsufficientStockException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         }
+    }
+
+    @GetMapping("/payMethods")
+    public List<PayMethod> getPayMethods(){
+        return payMethodRepository.findAll();
+    }
+    @GetMapping("/shipmentMethods")
+    public List<ShipmentMethod> getShipmentMethods(){
+        return shipmentMethodRepository.findAll();
     }
 
 }

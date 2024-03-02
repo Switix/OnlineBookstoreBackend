@@ -34,6 +34,14 @@ public class OrderDetail {
     @JoinColumn(name = "shipping_address_id",nullable = false)
     private ShippingAddress shippingAddress;
 
+    @ManyToOne
+    @JoinColumn(name = "pay_method_id",nullable = false)
+    private PayMethod payMethod;
+
+    @ManyToOne
+    @JoinColumn(name = "shipment_method_id",nullable = false)
+    private ShipmentMethod shipmentMethod;
+
     @CreationTimestamp
     private Instant createdAt;
 

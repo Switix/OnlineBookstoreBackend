@@ -48,6 +48,7 @@ public class AppUserServiceImpl implements AppUserService {
         appUserDto.setRole(updatedUser.getRole().getName());
         appUserDto.setId(updatedUser.getId());
         appUserDto.setBillingAddress(updatedUser.getBillingAddress());
+        appUserDto.setShippingAddresses(updatedUser.getShippingAddresses());
 
         return appUserDto;
     }

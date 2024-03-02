@@ -77,6 +77,7 @@ public class AuthServiceImpl implements AuthService {
         appUserDto.setRole(savedUser.getRole().getName());
         appUserDto.setId(savedUser.getId());
         appUserDto.setBillingAddress(savedUser.getBillingAddress());
+        appUserDto.setShippingAddresses(savedUser.getShippingAddresses());
         return appUserDto;
     }
 
