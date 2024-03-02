@@ -30,8 +30,10 @@ public class TestData {
     private final ShippingAddressRepository shippingAddressRepository;
     private final ShoppingSessionRepository shoppingSessionRepository;
     private final CartItemRepository cartItemRepository;
+    private final PayMethodRepository payMethodRepository;
+    private final ShipmentMethodRepository shipmentMethodRepository;
 
-    public TestData(AppUserRepository appUserRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthorRepository authorRepository, CategoryRepository categoryRepository, BookInventoryRepository bookInventoryRepository, BookRepository bookRepository, CityRepository cityRepository, CountryRepository countryRepository, BillingAddressRepository billingAddressRepository, ShippingAddressRepository shippingAddressRepository, ShoppingSessionRepository shoppingSessionRepository, CartItemRepository cartItemRepository) {
+    public TestData(AppUserRepository appUserRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthorRepository authorRepository, CategoryRepository categoryRepository, BookInventoryRepository bookInventoryRepository, BookRepository bookRepository, CityRepository cityRepository, CountryRepository countryRepository, BillingAddressRepository billingAddressRepository, ShippingAddressRepository shippingAddressRepository, ShoppingSessionRepository shoppingSessionRepository, CartItemRepository cartItemRepository, PayMethodRepository payMethodRepository, ShipmentMethodRepository shipmentMethodRepository) {
         this.appUserRepository = appUserRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -45,6 +47,8 @@ public class TestData {
         this.shippingAddressRepository = shippingAddressRepository;
         this.shoppingSessionRepository = shoppingSessionRepository;
         this.cartItemRepository = cartItemRepository;
+        this.payMethodRepository = payMethodRepository;
+        this.shipmentMethodRepository = shipmentMethodRepository;
 
         authorTestData();
         categoryTestData();
@@ -58,7 +62,37 @@ public class TestData {
         shoppingSessionTestData();
         cartItemTestData();
         shippingAddressTestData();
+        payMethodTestData();
+        shipmentMethodTestData();
 
+    }
+
+    private void shipmentMethodTestData() {
+        ShipmentMethod shipmentMethod = new ShipmentMethod();
+        shipmentMethod.setName("Kurier Inpost");
+        shipmentMethod.setPrice(BigDecimal.ZERO);
+        shipmentMethod.setImageUrl("https://inpost.pl/sites/default/files/2021-02/logo_Kurier.png");
+
+        ShipmentMethod shipmentMethod2 = new ShipmentMethod();
+        shipmentMethod2.setName("Kurier DPD");
+        shipmentMethod2.setPrice(BigDecimal.valueOf(12.30));
+        shipmentMethod2.setImageUrl("https://inpost.pl/sites/default/files/2021-02/logo_Kurier.png");
+
+        shipmentMethodRepository.save(shipmentMethod);
+        shipmentMethodRepository.save(shipmentMethod2);
+    }
+
+    private void payMethodTestData() {
+        PayMethod payMethod = new PayMethod();
+        payMethod.setName("Przedpłata - Blik");
+        payMethod.setImageUrl("https://pep.pl/online/wp-content/uploads/sites/2/2022/04/BLIK-LOGO-RGB.png");
+
+        PayMethod payMethod2 = new PayMethod();
+        payMethod2.setName("Przedpłata - PayPal");
+        payMethod2.setImageUrl("https://pep.pl/online/wp-content/uploads/sites/2/2022/04/BLIK-LOGO-RGB.png");
+
+        payMethodRepository.save(payMethod);
+        payMethodRepository.save(payMethod2);
     }
 
     private void cartItemTestData() {

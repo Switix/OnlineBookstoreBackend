@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("api/billingAddress/")
+@RequestMapping("api/billingAddress")
 public class BillingAddressController {
 
     private final BillingAddressService billingAddressService;
