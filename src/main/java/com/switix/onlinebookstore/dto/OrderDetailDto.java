@@ -1,5 +1,6 @@
 package com.switix.onlinebookstore.dto;
 
+import com.switix.onlinebookstore.model.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,5 @@ public class OrderDetailDto {
     private Long id;
     private BigDecimal total;
     private Instant createdAt;
+    private OrderStatus orderStatus;
 }

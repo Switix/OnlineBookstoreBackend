@@ -5,25 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "order_item")
-public class OrderItem {
-
+@Table(name = "order_status")
+public class OrderStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "order_detail_id", nullable = false)
-    private OrderDetail orderDetail;
-
-    @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false)
-    private Book book;
-
     @Column(nullable = false)
-    private int quantity;
+    private String status;
 }

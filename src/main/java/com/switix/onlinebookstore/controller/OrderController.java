@@ -3,9 +3,11 @@ package com.switix.onlinebookstore.controller;
 import com.switix.onlinebookstore.dto.OrderDetailCreationDto;
 import com.switix.onlinebookstore.dto.OrderDetailDto;
 import com.switix.onlinebookstore.dto.OrderItemDto;
+import com.switix.onlinebookstore.dto.UpdateOrderDto;
 import com.switix.onlinebookstore.exception.BookInsufficientStockException;
 import com.switix.onlinebookstore.exception.EmptyShoppingCartException;
 import com.switix.onlinebookstore.exception.OrderDetailNotFoundException;
+import com.switix.onlinebookstore.exception.OrderStatusNotFoundException;
 import com.switix.onlinebookstore.model.AppUser;
 import com.switix.onlinebookstore.model.OrderDetail;
 import com.switix.onlinebookstore.model.PayMethod;
@@ -37,7 +39,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderDetailId}")
-    public ResponseEntity<OrderDetailDto> getOrderDetail(@PathVariable Long orderDetailId) {
+    public ResponseEntity<OrderDetail> getOrderDetail(@PathVariable Long orderDetailId) {
         try {
             return ResponseEntity.ok(orderService.getOrderDetail(orderDetailId));
         } catch (OrderDetailNotFoundException e) {
@@ -45,39 +47,65 @@ public class OrderController {
                     HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
+
     @GetMapping()
-    public List<OrderDetailDto> getOrderDetails(Authentication authentication){
+    public List<OrderDetailDto> getOrderDetails(Authentication authentication) {
         Long appUserId = ((AppUser) authentication.getPrincipal()).getId();
         return orderService.getOrdersDetail(appUserId);
     }
+
+    @GetMapping("admin")
+    public List<OrderDetailDto> getOrderDetailsAdmin() {
+        return orderService.getOrdersDetailAdmin();
+    }
+
     @GetMapping("/{orderDetailId}/orderItems")
-        public List<OrderItemDto> getOrderItems(@PathVariable Long orderDetailId){
+    public List<OrderItemDto> getOrderItems(@PathVariable Long orderDetailId) {
         return orderService.getOrderItems(orderDetailId);
     }
+
     @PostMapping()
-    public ResponseEntity<Void> createOrderDetail(@RequestBody OrderDetailCreationDto orderDetailCreationDto, Authentication authentication){
+    public ResponseEntity<Void> createOrderDetail(@RequestBody OrderDetailCreationDto orderDetailCreationDto, Authentication authentication) {
         try {
             Long shoppingSessionId = ((AppUser) authentication.getPrincipal()).getShoppingSession().getId();
-            OrderDetail orderDetail = orderService.createOrderDetail(orderDetailCreationDto,shoppingSessionId);
+            OrderDetail orderDetail = orderService.createOrderDetail(orderDetailCreationDto, shoppingSessionId);
 
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{orderDetailId}").buildAndExpand(orderDetail.getId()).toUri();
             return ResponseEntity.created(location).build();
-        }
-        catch (EmptyShoppingCartException e){
+        } catch (EmptyShoppingCartException e) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage(), e);
-        }
-        catch (BookInsufficientStockException e){
+        } catch (BookInsufficientStockException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         }
     }
 
+    @PatchMapping("admin")
+    public ResponseEntity<Void> updateOrder(@RequestBody UpdateOrderDto updateOrderDto) {
+        try {
+            orderService.updateOrder(updateOrderDto);
+            return ResponseEntity.noContent().build();
+        } catch (OrderStatusNotFoundException | OrderDetailNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+    @DeleteMapping("admin/{orderId}")
+    public ResponseEntity<Void> deleteOrder( @PathVariable Long orderId) {
+        try {
+            orderService.deleteOrder(orderId);
+            return ResponseEntity.noContent().build();
+        } catch (OrderStatusNotFoundException | OrderDetailNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
     @GetMapping("/payMethods")
-    public List<PayMethod> getPayMethods(){
+    public List<PayMethod> getPayMethods() {
         return payMethodRepository.findAll();
     }
+
     @GetMapping("/shipmentMethods")
-    public List<ShipmentMethod> getShipmentMethods(){
+    public List<ShipmentMethod> getShipmentMethods() {
         return shipmentMethodRepository.findAll();
     }
 

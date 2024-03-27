@@ -32,8 +32,9 @@ public class TestData {
     private final CartItemRepository cartItemRepository;
     private final PayMethodRepository payMethodRepository;
     private final ShipmentMethodRepository shipmentMethodRepository;
+    private final OrderStatusRepository orderStatusRepository;
 
-    public TestData(AppUserRepository appUserRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthorRepository authorRepository, CategoryRepository categoryRepository, BookInventoryRepository bookInventoryRepository, BookRepository bookRepository, CityRepository cityRepository, CountryRepository countryRepository, BillingAddressRepository billingAddressRepository, ShippingAddressRepository shippingAddressRepository, ShoppingSessionRepository shoppingSessionRepository, CartItemRepository cartItemRepository, PayMethodRepository payMethodRepository, ShipmentMethodRepository shipmentMethodRepository) {
+    public TestData(AppUserRepository appUserRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthorRepository authorRepository, CategoryRepository categoryRepository, BookInventoryRepository bookInventoryRepository, BookRepository bookRepository, CityRepository cityRepository, CountryRepository countryRepository, BillingAddressRepository billingAddressRepository, ShippingAddressRepository shippingAddressRepository, ShoppingSessionRepository shoppingSessionRepository, CartItemRepository cartItemRepository, PayMethodRepository payMethodRepository, ShipmentMethodRepository shipmentMethodRepository, OrderStatusRepository orderStatusRepository) {
         this.appUserRepository = appUserRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -49,6 +50,7 @@ public class TestData {
         this.cartItemRepository = cartItemRepository;
         this.payMethodRepository = payMethodRepository;
         this.shipmentMethodRepository = shipmentMethodRepository;
+        this.orderStatusRepository = orderStatusRepository;
 
         authorTestData();
         categoryTestData();
@@ -64,7 +66,27 @@ public class TestData {
         shippingAddressTestData();
         payMethodTestData();
         shipmentMethodTestData();
+        orderStatusTestData();
 
+    }
+
+    private void orderStatusTestData() {
+        OrderStatus orderStatus = new OrderStatus();
+        orderStatus.setStatus("Nieopłacone");
+
+        OrderStatus orderStatus2 = new OrderStatus();
+        orderStatus2.setStatus("Opłacone");
+
+        OrderStatus orderStatus3 = new OrderStatus();
+        orderStatus3.setStatus("W realizacji");
+
+        OrderStatus orderStatus4 = new OrderStatus();
+        orderStatus4.setStatus("Wysłane");
+
+        orderStatusRepository.save(orderStatus);
+        orderStatusRepository.save(orderStatus2);
+        orderStatusRepository.save(orderStatus3);
+        orderStatusRepository.save(orderStatus4);
     }
 
     private void shipmentMethodTestData() {
@@ -299,29 +321,43 @@ public class TestData {
     private void roleTestData() {
         Role role = new Role();
         role.setName("ROLE_CUSTOMER");
+
+        Role role2 = new Role();
+        role2.setName("ROLE_ADMIN");
+
         roleRepository.save(role);
+        roleRepository.save(role2);
     }
 
     private void appUserTestData() {
-        Role role = roleRepository.findByName("ROLE_CUSTOMER").get();
+        Role roleCustomer = roleRepository.findByName("ROLE_CUSTOMER").get();
+        Role roleAdmin = roleRepository.findByName("ROLE_ADMIN").get();
 
         AppUser user = new AppUser();
         user.setEmail("user@example.com");
         user.setPassword(passwordEncoder.encode("user"));
         user.setName("Maciej");
         user.setLastname("Świtalski");
-        user.setRole(role);
-
+        user.setRole(roleCustomer);
 
         AppUser user2 = new AppUser();
-        user2.setEmail("macie789@wp.pl");
-        user2.setPassword(passwordEncoder.encode("user"));
+        user2.setEmail("admin@example.com");
+        user2.setPassword(passwordEncoder.encode("admin"));
         user2.setName("Maciej");
         user2.setLastname("Świtalski");
-        user2.setRole(role);
+        user2.setRole(roleAdmin);
+
+
+        AppUser user3 = new AppUser();
+        user3.setEmail("macie789@wp.pl");
+        user3.setPassword(passwordEncoder.encode("user"));
+        user3.setName("Maciej");
+        user3.setLastname("Świtalski");
+        user3.setRole(roleCustomer);
 
         appUserRepository.save(user);
         appUserRepository.save(user2);
+        appUserRepository.save(user3);
     }
 
     private void populateCityTable() {

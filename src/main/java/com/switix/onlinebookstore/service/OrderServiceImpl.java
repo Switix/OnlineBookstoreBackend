@@ -1,13 +1,7 @@
 package com.switix.onlinebookstore.service;
 
-import com.switix.onlinebookstore.dto.CartItemDto;
-import com.switix.onlinebookstore.dto.OrderDetailCreationDto;
-import com.switix.onlinebookstore.dto.OrderDetailDto;
-import com.switix.onlinebookstore.dto.OrderItemDto;
-import com.switix.onlinebookstore.exception.BookInsufficientStockException;
-import com.switix.onlinebookstore.exception.EmptyShoppingCartException;
-import com.switix.onlinebookstore.exception.OrderDetailNotFoundException;
-import com.switix.onlinebookstore.exception.ShoppingSessionNotFoundException;
+import com.switix.onlinebookstore.dto.*;
+import com.switix.onlinebookstore.exception.*;
 import com.switix.onlinebookstore.model.*;
 import com.switix.onlinebookstore.repository.*;
 import org.springframework.stereotype.Service;
@@ -26,8 +20,9 @@ public class OrderServiceImpl implements OrderService {
     private final BillingAddressService billingAddressService;
     private final PayMethodRepository payMethodRepository;
     private final ShipmentMethodRepository shipmentMethodRepository;
+    private final OrderStatusRepository orderStatusRepository;
 
-    public OrderServiceImpl(OrderDetailRepository orderDetailRepository, OrderItemRepository orderItemRepository, ShoppingService shoppingService, ShoppingSessionRepository shoppingSessionRepository, ShippingAddressService shippingAddressService, BillingAddressService billingAddressService, PayMethodRepository payMethodRepository, ShipmentMethodRepository shipmentMethodRepository) {
+    public OrderServiceImpl(OrderDetailRepository orderDetailRepository, OrderItemRepository orderItemRepository, ShoppingService shoppingService, ShoppingSessionRepository shoppingSessionRepository, ShippingAddressService shippingAddressService, BillingAddressService billingAddressService, PayMethodRepository payMethodRepository, ShipmentMethodRepository shipmentMethodRepository, OrderStatusRepository orderStatusRepository) {
         this.orderDetailRepository = orderDetailRepository;
         this.orderItemRepository = orderItemRepository;
         this.shoppingService = shoppingService;
@@ -36,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
         this.billingAddressService = billingAddressService;
         this.payMethodRepository = payMethodRepository;
         this.shipmentMethodRepository = shipmentMethodRepository;
+        this.orderStatusRepository = orderStatusRepository;
     }
 
     @Override
@@ -56,10 +52,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDetailDto getOrderDetail(Long orderDetailId) {
-        OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId)
+    public List<OrderDetailDto> getOrdersDetailAdmin() {
+        List<OrderDetail> orderDetails = orderDetailRepository.findAll();
+        return orderDetails.stream()
+                .map(this::mapToOrderDetailDto)
+                .toList();
+    }
+
+    @Override
+    public OrderDetail getOrderDetail(Long orderDetailId) {
+        return orderDetailRepository.findById(orderDetailId)
                 .orElseThrow(() -> new OrderDetailNotFoundException("Order detail not found"));
-        return mapToOrderDetailDto(orderDetail);
     }
 
     @Override
@@ -70,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
 
 
         BillingAddress billingAddress = billingAddressService.getBillingAddress(orderDetailCreationDto.getBillingAddressId());
-        ShippingAddress shippingAddress =  shippingAddressService.getShippingAddress(orderDetailCreationDto.getShippingAddressId());
+        ShippingAddress shippingAddress = shippingAddressService.getShippingAddress(orderDetailCreationDto.getShippingAddressId());
 
         PayMethod payMethod = payMethodRepository.findById(orderDetailCreationDto.getPayMethodId()).get();
         ShipmentMethod shipmentMethod = shipmentMethodRepository.findById(orderDetailCreationDto.getShipmentMethodId()).get();
@@ -100,12 +103,13 @@ public class OrderServiceImpl implements OrderService {
         orderDetail.setAppUser(shoppingSession.getAppUser());
         orderDetail.setShippingAddress(shippingAddress);
         orderDetail.setBillingAddress(billingAddress);
+        orderDetail.setOrderStatus(orderStatusRepository.findById(2L).get());
         orderDetail.setPayMethod(payMethod);
         orderDetail.setShipmentMethod(shipmentMethod);
         List<OrderItem> orderItems = cartItems.stream()
                 .map(this::mapToOrderItem)
                 .toList();
-        
+
 
         orderItems.forEach(orderItem -> orderItem.setOrderDetail(orderDetail));
 
@@ -122,6 +126,24 @@ public class OrderServiceImpl implements OrderService {
         return savedOrderDetail;
     }
 
+    @Override
+    public void updateOrder(UpdateOrderDto updateOrderDto) {
+        OrderDetail orderDetail = orderDetailRepository.findById(updateOrderDto.getId())
+                .orElseThrow(() -> new OrderDetailNotFoundException("Order detail not found"));
+
+        OrderStatus orderStatus = orderStatusRepository.findById(updateOrderDto.getOrderStatusId())
+                .orElseThrow(() -> new OrderStatusNotFoundException("Order Status not found"));
+
+        orderDetail.setOrderStatus(orderStatus);
+
+        orderStatusRepository.save(orderStatus);
+    }
+
+    @Override
+    public void deleteOrder(Long orderId) {
+        orderDetailRepository.deleteById(orderId);
+    }
+
 
     private OrderItem mapToOrderItem(CartItemDto cartItemDto) {
         OrderItem orderItem = new OrderItem();
@@ -133,9 +155,10 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderDetailDto mapToOrderDetailDto(OrderDetail orderDetail) {
         OrderDetailDto orderDetailDto = new OrderDetailDto();
-        orderDetailDto.setId(orderDetailDto.getId());
+        orderDetailDto.setId(orderDetail.getId());
         orderDetailDto.setTotal(orderDetail.getTotal());
         orderDetailDto.setCreatedAt(orderDetail.getCreatedAt());
+        orderDetailDto.setOrderStatus(orderDetail.getOrderStatus());
         return orderDetailDto;
     }
 
