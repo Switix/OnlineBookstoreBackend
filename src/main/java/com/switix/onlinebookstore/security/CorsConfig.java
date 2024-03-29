@@ -15,6 +15,7 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:8081") // Replace with your frontend URL
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") // Allowed HTTP methods
                 .allowedHeaders("*") // Allowed headers
+                .exposedHeaders("Authorization", "Location")// Allowed headers
                 .allowCredentials(true) // Allow credentials (cookies)
                 .maxAge(3600); // Max age for preflight requests
     }
