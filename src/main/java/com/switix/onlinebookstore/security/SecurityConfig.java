@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 .requestMatchers("api/billingAddress/**").hasRole("CUSTOMER")
                                 .requestMatchers("api/shippingAddress/**").hasRole("CUSTOMER")
                                 .requestMatchers("api/authors/admin/**").hasRole("ADMIN")
+                                .requestMatchers("api/categories/admin/**").hasRole("ADMIN")
                                 //.anyRequest().hasRole("CUSTOMER")
                                 .anyRequest().permitAll()
                 )

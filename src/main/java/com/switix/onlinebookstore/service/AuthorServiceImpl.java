@@ -28,11 +28,6 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<Author> getAuthorById(Long id) {
-        return authorRepository.findById(id);
-    }
-
-    @Override
     public List<AuthorBookCountDto> countAllBooksMadeByAuthors() {
         return authorRepository.countBooksByAuthorOrderedByName();
     }

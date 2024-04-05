@@ -4,8 +4,9 @@ package com.switix.onlinebookstore.controller;
 import com.switix.onlinebookstore.dto.AuthorBookCountDto;
 import com.switix.onlinebookstore.dto.SearchDto;
 import com.switix.onlinebookstore.model.Author;
-import com.switix.onlinebookstore.repository.CategoryRepository;
+import com.switix.onlinebookstore.model.Category;
 import com.switix.onlinebookstore.service.AuthorService;
+import com.switix.onlinebookstore.service.CategoryService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,11 +19,11 @@ import java.util.List;
 public class SearchController {
 
     private final AuthorService authorService;
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
-    public SearchController(AuthorService authorService, CategoryRepository categoryRepository) {
+    public SearchController(AuthorService authorService, CategoryService categoryService) {
         this.authorService = authorService;
-        this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
     }
 
     @GetMapping(params = "q")
@@ -30,7 +31,7 @@ public class SearchController {
         String searchQuery = "%" + q + "%";
         SearchDto result = new SearchDto();
         result.setSuggestedAuthors(authorService.getAuthorsByName(searchQuery));
-        result.setSuggestedCategories(categoryRepository.findAllByNameLikeIgnoreCase(searchQuery));
+        result.setSuggestedCategories(categoryService.getCategoriesByName(searchQuery));
         return result;
     }
 
@@ -44,5 +45,11 @@ public class SearchController {
     public List<Author> searchAuthorsByName(@RequestParam String q) {
         String searchQuery = "%" + q + "%";
         return authorService.getAuthorsByName(searchQuery);
+    }
+
+    @GetMapping(path = "categories", params = "q")
+    public List<Category> searchCategoriesByName(@RequestParam String q) {
+        String searchQuery = "%" + q + "%";
+        return categoryService.getCategoriesByName(searchQuery);
     }
 }

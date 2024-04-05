@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface AuthorService {
     List<Author> getAuthorsByName(String name);
-    Optional<Author> getAuthorById(Long id);
     List<AuthorBookCountDto> countAllBooksMadeByAuthors();
 
     void updateAuthor(UpdateAuthorDto updateAuthorDto);
