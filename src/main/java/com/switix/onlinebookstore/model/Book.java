@@ -21,6 +21,9 @@ public class Book {
     private Long id;
 
     @Column(nullable = false)
+    private Boolean isRemoved = false;
+
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
@@ -42,7 +45,7 @@ public class Book {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "inventory_id", nullable = false)
     private BookInventory inventory;
 

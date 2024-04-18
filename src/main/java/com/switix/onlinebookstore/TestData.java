@@ -270,6 +270,7 @@ public class TestData {
         book5.setCategory(categories.get(2));
         book5.setIsbn("9780747535748");
         book5.setPublicationYear(2012);
+        book5.setIsRemoved(true);
 
         bookRepository.save(book1);
         bookRepository.save(book2);
