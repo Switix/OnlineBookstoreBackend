@@ -99,7 +99,7 @@ public class OrderServiceImpl implements OrderService {
         });
 
         OrderDetail orderDetail = new OrderDetail();
-        orderDetail.setTotal(shoppingSession.getTotal());
+        orderDetail.setTotal(shoppingSession.getTotal().add(shipmentMethod.getPrice()));
         orderDetail.setAppUser(shoppingSession.getAppUser());
         orderDetail.setShippingAddress(shippingAddress);
         orderDetail.setBillingAddress(billingAddress);
