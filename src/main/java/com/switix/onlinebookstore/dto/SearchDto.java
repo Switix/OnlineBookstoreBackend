@@ -1,6 +1,7 @@
 package com.switix.onlinebookstore.dto;
 
 import com.switix.onlinebookstore.model.Author;
+import com.switix.onlinebookstore.model.Book;
 import com.switix.onlinebookstore.model.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,4 +15,5 @@ import java.util.List;
 public class SearchDto {
     List<Author> suggestedAuthors;
     List<Category> suggestedCategories;
+    List<Book> suggestedBooks;
 }

@@ -36,6 +36,7 @@ public class SearchController {
         SearchDto result = new SearchDto();
         result.setSuggestedAuthors(authorService.getAuthorsByName(searchQuery));
         result.setSuggestedCategories(categoryService.getCategoriesByName(searchQuery));
+        result.setSuggestedBooks(bookService.getBooksByTittle(searchQuery,false));
         return result;
     }
 
