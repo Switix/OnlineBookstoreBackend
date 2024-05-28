@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,21 +53,24 @@ public class TestData {
         this.shipmentMethodRepository = shipmentMethodRepository;
         this.orderStatusRepository = orderStatusRepository;
 
-        authorTestData();
-        categoryTestData();
-        bookInventoryTestData();
-        bookTestData();
-        roleTestData();
-        populateCityTable();
-        countryTestData();
-        appUserTestData();
-        billingAddressTestData();
-        shoppingSessionTestData();
-        cartItemTestData();
-        shippingAddressTestData();
-        payMethodTestData();
-        shipmentMethodTestData();
-        orderStatusTestData();
+        if (appUserRepository.count() == 0) {
+            authorTestData();
+            categoryTestData();
+            bookInventoryTestData();
+            bookTestData();
+            roleTestData();
+            populateCityTable();
+            countryTestData();
+            appUserTestData();
+            billingAddressTestData();
+            shoppingSessionTestData();
+            cartItemTestData();
+            shippingAddressTestData();
+            payMethodTestData();
+            shipmentMethodTestData();
+            orderStatusTestData();
+        }
+
 
     }
 
@@ -177,6 +181,7 @@ public class TestData {
 
         billingAddressRepository.save(billingAddress);
     }
+
     private void shippingAddressTestData() {
         Country country = countryRepository.findByCountryName("Polska").get();
         City city = cityRepository.findByCityName("Nakło nad Notecią").get();
@@ -208,34 +213,36 @@ public class TestData {
         List<Category> categories = categoryRepository.findAll();
 
         Book book1 = new Book();
-        book1.setTitle("Harry Potter and the Philosopher's Stone");
+        book1.setTitle("Harry Potter i Kamień Filozoficzny");
         book1.setImageUrl("harry_potter_and_the_philosopher_stone.jpg");
-        book1.setDescription("A young wizard's journey at Hogwarts.");
+        book1.setDescription("Śledź magiczną podróż Harry'ego Pottera, jedenastoletniego chłopca, który w dniu swoich urodzin odkrywa, że jest czarodziejem. Po życiu w zaniedbaniu z jego nienawidzącymi go ciotką i wujkiem, Harry zostaje zaproszony do uczęszczania do Szkoły Magii i Czarodziejstwa w Hogwarcie. Tam znajduje przyjaciół, odkrywa tajemnice swojej przeszłości i staje w obliczu ciemnych sił, próbując powstrzymać powrót złego czarodzieja, Lorda Voldemorta. Ta czarująca opowieść to pierwsza część ukochanej serii o Harrym Potterze, pełna przygód, przyjaźni i odwiecznej walki między dobrem a złem.");
         book1.setPrice(new BigDecimal("78.90"));
         book1.setInventory(bookInventories.get(0));
         book1.setBookAuthors(authors.stream()
                 .filter(author -> author.getName().equals("J.K. Rowling"))
                 .collect(Collectors.toSet()));
-        book1.setCategory(categories.get(1));
+        book1.setCategory(categories.get(0));
         book1.setIsbn("9780747532743");
         book1.setPublicationYear(1997);
 
 
         Book book2 = new Book();
         book2.setTitle("1984");
-        book2.setImageUrl("harry_potter_and_the_philosopher_stone.jpg");
-        book2.setDescription("A dystopian novel about a totalitarian regime.");
-        book2.setPrice(new BigDecimal("109.99"));
+        book2.setImageUrl("1984.jpg");
+        book2.setDescription("Kultowa powieść George'a Orwella przedstawiająca dystopijną przyszłość, w której wszechwładna Partia kontroluje każdy aspekt życia obywateli.");
+        book2.setPrice(new BigDecimal("39.90"));
         book2.setInventory(bookInventories.get(1));
-        book2.setBookAuthors(new HashSet<>(authors));
-        book2.setCategory(categories.get(1));
+        book2.setBookAuthors(authors.stream()
+                .filter(author -> author.getName().equals("George Orwell"))
+                .collect(Collectors.toSet()));
+        book2.setCategory(categories.get(4));
         book2.setIsbn("9780748902721");
-        book2.setPublicationYear(2001);
+        book2.setPublicationYear(1949);
 
         Book book3 = new Book();
         book3.setTitle("It");
         book3.setImageUrl("It.jpg");
-        book3.setDescription("A horror novel by Stephen King.");
+        book3.setDescription("„To” to powieść grozy autorstwa Stephena Kinga. Akcja książki toczy się w małym miasteczku Derry w stanie Maine, gdzie dzieci są terroryzowane przez złowrogą istotę przybierającą formę klauna o imieniu Pennywise. Powieść przeplata wątki przeszłości i teraźniejszości, opowiadając o grupie przyjaciół, którzy muszą stawić czoła swojemu największemu koszmarowi zarówno jako dzieci, jak i dorośli. „To” to mistrzowsko skonstruowana opowieść o przyjaźni, odwadze i walce z najgłębszymi lękami.");
         book3.setPrice(new BigDecimal("154.34"));
         book3.setInventory(bookInventories.get(2));
         book3.setBookAuthors(authors.stream()
@@ -246,37 +253,139 @@ public class TestData {
         book3.setPublicationYear(2007);
 
         Book book4 = new Book();
-        book4.setTitle("It");
-        book4.setImageUrl("It.jpg");
-        book4.setDescription("A horror novel by Stephen King.");
-        book4.setPrice(new BigDecimal("154.34"));
-        book4.setInventory(bookInventories.get(2));
+        book4.setTitle("Martwa strefa");
+        book4.setImageUrl("martwa_strefa.jpg");
+        book4.setDescription("„Martwa strefa” to jedna z klasycznych powieści Stephena Kinga, w której główny bohater, Johnny Smith, budzi się ze śpiączki po wypadku samochodowym i odkrywa, że posiada zdolność przewidywania przyszłości. Wkrótce odkrywa, że ta zdolność nie jest błogosławieństwem, lecz przekleństwem, gdyż jest zmuszony zmierzyć się z moralnymi dylematami i konsekwencjami swoich przepowiedni.");
+        book4.setPrice(new BigDecimal("49.99"));
+        book4.setInventory(bookInventories.get(3));
         book4.setBookAuthors(authors.stream()
                 .filter(author -> author.getName().contains("Stephen King"))
                 .collect(Collectors.toSet()));
         book4.setCategory(categories.get(2));
-        book4.setIsbn("9780747538907");
-        book4.setPublicationYear(2009);
+        book4.setIsbn("9780451167804");
+        book4.setPublicationYear(1979);
 
         Book book5 = new Book();
-        book5.setTitle("It");
-        book5.setImageUrl("It.jpg");
-        book5.setDescription("A horror novel by Stephen King.");
-        book5.setPrice(new BigDecimal("154.34"));
-        book5.setInventory(bookInventories.get(2));
+        book5.setTitle("Shining");
+        book5.setImageUrl("shining.jpg");
+        book5.setDescription("„Shining” to klasyczna powieść Stephena Kinga, która opowiada historię Jacka Torrance'a, który przyjmuje pracę opiekuna w opuszczonym hotelu Overlook w górach Kolorado. Razem z żoną i synem, Danny'm, Jack staje się świadkiem złowrogiej mocy budynku, która zaczyna wpływać na jego umysł, prowadząc do tragicznych wydarzeń. „Shining” to przerażająca opowieść o izolacji, szaleństwie i duchowych przekleństwach.");
+        book5.setPrice(new BigDecimal("59.90"));
+        book5.setInventory(bookInventories.get(4));
         book5.setBookAuthors(authors.stream()
                 .filter(author -> author.getName().contains("Stephen King"))
                 .collect(Collectors.toSet()));
-        book5.setCategory(categories.get(2));
-        book5.setIsbn("9780747535748");
-        book5.setPublicationYear(2012);
-        book5.setIsRemoved(true);
+        book5.setCategory(categories.get(2)); // Horror
+        book5.setIsbn("9780385121675");
+        book5.setPublicationYear(1977);
+
+        Book book6 = new Book();
+        book6.setTitle("Zielona mila");
+        book6.setImageUrl("zielona_mila.jpg");
+        book6.setDescription("„Zielona mila” to poruszająca powieść Stephena Kinga, której akcja toczy się w więzieniu Cold Mountain w Luizjanie w latach 30. XX wieku. Główny bohater, Paul Edgecomb, jest strażnikiem, który staje się świadkiem niezwykłego wydarzenia - pojawienia się więźnia o imieniu John Coffey, który posiada nadprzyrodzone zdolności uzdrawiania. Powieść porusza tematy moralności, sprawiedliwości i nadziei w obliczu ciemności.");
+        book6.setPrice(new BigDecimal("69.99"));
+        book6.setInventory(bookInventories.get(5));
+        book6.setBookAuthors(authors.stream()
+                .filter(author -> author.getName().contains("Stephen King"))
+                .collect(Collectors.toSet()));
+        book6.setCategory(categories.get(2)); // Horror
+        book6.setIsbn("9780451933021");
+        book6.setPublicationYear(1996);
+
+        Book book7 = new Book();
+        book7.setTitle("Talisman");
+        book7.setImageUrl("talisman.jpg");
+        book7.setDescription("„Talisman” to wspólna powieść Stephena Kinga i Petera Strauba, która opowiada historię chłopca, który wyrusza w niebezpieczną podróż przez mroczny świat równoległy, aby odnaleźć magiczny talizman, który może uratować jego umierającej matce.");
+        book7.setPrice(new BigDecimal("79.90"));
+        book7.setInventory(bookInventories.get(6));
+        book7.setBookAuthors(new HashSet<>(Arrays.asList(authors.get(2), authors.get(3))));
+        book7.setCategory(categories.get(1)); // Science Fiction
+        book7.setIsbn("9780451212451");
+        book7.setPublicationYear(1984);
+
+        Book book8 = new Book();
+        book8.setTitle("Duma i uprzedzenie");
+        book8.setImageUrl("duma_i_uprzedzenie.jpg");
+        book8.setDescription("„Duma i uprzedzenie” to klasyczna powieść Jane Austen, która opowiada historię Elizabeth Bennet i jej dążenia do miłości i szczęścia w XIX-wiecznej Anglii, gdzie społeczne konwenanse i oczekiwania ograniczają jej wybory życiowe.");
+        book8.setPrice(new BigDecimal("29.99"));
+        book8.setInventory(bookInventories.get(7));
+        book8.setBookAuthors(authors.stream()
+                .filter(author -> author.getName().equals("Jane Austen"))
+                .collect(Collectors.toSet()));
+        book8.setCategory(categories.get(3)); // Romans
+        book8.setIsbn("9788324072563");
+        book8.setPublicationYear(1813);
+
+        Book book9 = new Book();
+        book9.setTitle("Harry Potter i Komnata Tajemnic");
+        book9.setImageUrl("harry_potter_i_komnata_tajemnic.jpg");
+        book9.setDescription("„Harry Potter i Komnata Tajemnic” to druga część serii Harry Potter autorstwa J.K. Rowling. W tej części młody czarodziej Harry Potter powraca do szkoły magii, aby odkryć tajemnice tajemniczej komnaty, która zagraża bezpieczeństwu uczniów Hogwartsu.");
+        book9.setPrice(new BigDecimal("39.99"));
+        book9.setInventory(bookInventories.get(8));
+        book9.setBookAuthors(authors.stream()
+                .filter(author -> author.getName().equals("J.K. Rowling"))
+                .collect(Collectors.toSet()));
+        book9.setCategory(categories.get(0)); // Fantasy
+        book9.setIsbn("9788372780126");
+        book9.setPublicationYear(1998);
+
+        Book book10 = new Book();
+        book10.setTitle("Władca Pierścieni: Drużyna Pierścienia");
+        book10.setImageUrl("wladca_pierscieni_druzyna_pierscienia.jpg");
+        book10.setDescription("„Władca Pierścieni: Drużyna Pierścienia” to pierwsza część epickiej trylogii fantasy J.R.R. Tolkiena. Książka opowiada historię młodego hobbita, Froda Bagginsa, który wyrusza w niebezpieczną podróż, aby zniszczyć potężny Pierścień, przed którym nawet najbardziej mężni bohaterowie się chylą.");
+        book10.setPrice(new BigDecimal("59.90"));
+        book10.setInventory(bookInventories.get(9));
+        book10.setBookAuthors(authors.stream()
+                .filter(author -> author.getName().equals("J.R.R. Tolkien"))
+                .collect(Collectors.toSet()));
+        book10.setCategory(categories.get(0)); // Fantasy
+        book10.setIsbn("9788376486742");
+        book10.setPublicationYear(1954);
+
+        Book book11 = new Book();
+        book11.setTitle("Gra o tron");
+        book11.setImageUrl("gra_o_tron.jpg");
+        book11.setDescription("„Gra o tron” to pierwsza książka z serii „Pieśń lodu i ognia” autorstwa George'a R.R. Martina. Akcja toczy się w królestwie Westeros, gdzie szlachetne rody walczą o władzę i przetrwanie w świecie pełnym intryg, intryg i niebezpieczeństw.");
+        book11.setPrice(new BigDecimal("79.99"));
+        book11.setInventory(bookInventories.get(10));
+        book11.setBookAuthors(authors.stream()
+                .filter(author -> author.getName().equals("George R.R. Martin"))
+                .collect(Collectors.toSet()));
+        book11.setCategory(categories.get(1));
+        book11.setIsbn("9788375780646");
+        book11.setPublicationYear(1996);
+
+        // Książka wielu autorów (3 autorów)
+        Book book12 = new Book();
+        book12.setTitle("W wysokiej trawie");
+        book12.setImageUrl("w_wysokiej_trawie.jpg");
+        book12.setDescription("„W wysokiej trawie” to powieść autorstwa Stephena Kinga i Joe Hilla, która przenosi czytelnika w mroczny świat, gdzie dwoje rodzeństwa wpada w pułapkę wysokiej trawy na odległym polu, gdzie czas i przestrzeń nie działają tak, jak powinny. Zagubieni i otoczeni przez trawę, zaczynają słyszeć dziwne głosy i odkrywają, że nie są sami...");
+        book12.setPrice(new BigDecimal("59.99"));
+        book12.setInventory(bookInventories.get(11));
+        book12.setBookAuthors(authors.stream()
+                .filter(author -> author.getName().equals("Stephen King") ||
+                        author.getName().equals("Joe Hill"))
+                .collect(Collectors.toSet()));
+        book12.setCategory(categories.get(2));
+        book12.setIsbn("9788375780646");
+        book12.setPublicationYear(2012);
+
+
+
+
 
         bookRepository.save(book1);
         bookRepository.save(book2);
         bookRepository.save(book3);
         bookRepository.save(book4);
         bookRepository.save(book5);
+        bookRepository.save(book6);
+        bookRepository.save(book7);
+        bookRepository.save(book8);
+        bookRepository.save(book9);
+        bookRepository.save(book10);
+        bookRepository.save(book11);
+        bookRepository.save(book12);
+
     }
 
     private void bookInventoryTestData() {
@@ -286,22 +395,61 @@ public class TestData {
         bookInventory2.setQuantity(0);
         BookInventory bookInventory3 = new BookInventory();
         bookInventory3.setQuantity(25);
+        BookInventory bookInventory4 = new BookInventory();
+        bookInventory4.setQuantity(31);
+        BookInventory bookInventory5 = new BookInventory();
+        bookInventory5.setQuantity(55);
+        BookInventory bookInventory6 = new BookInventory();
+        bookInventory6.setQuantity(37);
+        BookInventory bookInventory7 = new BookInventory();
+        bookInventory7.setQuantity(2);
+        BookInventory bookInventory8 = new BookInventory();
+        bookInventory8.setQuantity(8);
+        BookInventory bookInventory9 = new BookInventory();
+        bookInventory9.setQuantity(123);
+        BookInventory bookInventory10 = new BookInventory();
+        bookInventory10.setQuantity(12);
+        BookInventory bookInventory11 = new BookInventory();
+        bookInventory11.setQuantity(77);
+        BookInventory bookInventory12 = new BookInventory();
+        bookInventory12.setQuantity(3);
+
         bookInventoryRepository.save(bookInventory1);
         bookInventoryRepository.save(bookInventory2);
         bookInventoryRepository.save(bookInventory3);
+        bookInventoryRepository.save(bookInventory4);
+        bookInventoryRepository.save(bookInventory5);
+        bookInventoryRepository.save(bookInventory6);
+        bookInventoryRepository.save(bookInventory7);
+        bookInventoryRepository.save(bookInventory8);
+        bookInventoryRepository.save(bookInventory9);
+        bookInventoryRepository.save(bookInventory10);
+        bookInventoryRepository.save(bookInventory11);
+        bookInventoryRepository.save(bookInventory12);
     }
 
     private void categoryTestData() {
         Category category1 = new Category();
         category1.setName("Fantasy");
+
         Category category2 = new Category();
         category2.setName("Science Fiction");
+
         Category category3 = new Category();
         category3.setName("Horror");
+
+        Category category4 = new Category();
+        category4.setName("Romans");
+
+        Category category5 = new Category();
+        category5.setName("Powieść dystopijna");
 
         categoryRepository.save(category1);
         categoryRepository.save(category2);
         categoryRepository.save(category3);
+        categoryRepository.save(category4);
+        categoryRepository.save(category5);
+
     }
 
     private void authorTestData() {
@@ -314,9 +462,29 @@ public class TestData {
         Author author3 = new Author();
         author3.setName("Stephen King");
 
+        Author author4 = new Author();
+        author4.setName("Peter Straub");
+
+        Author author5 = new Author();
+        author5.setName("Jane Austen");
+
+        Author author6 = new Author();
+        author6.setName("J.R.R. Tolkien");
+
+        Author author7 = new Author();
+        author7.setName("George R.R. Martin");
+
+        Author author8 = new Author();
+        author8.setName("Joe Hill");
+
         authorRepository.save(author1);
         authorRepository.save(author2);
         authorRepository.save(author3);
+        authorRepository.save(author4);
+        authorRepository.save(author5);
+        authorRepository.save(author6);
+        authorRepository.save(author7);
+        authorRepository.save(author8);
     }
 
     private void roleTestData() {
