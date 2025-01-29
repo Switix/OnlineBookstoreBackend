@@ -38,7 +38,6 @@ public class AuthorServiceImpl implements AuthorService {
                 .orElseThrow(() -> new AuthorNotFoundException("Author not found"));
 
         author.setName(updateAuthorDto.getName());
-
         authorRepository.save(author);
     }
 

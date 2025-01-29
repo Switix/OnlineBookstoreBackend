@@ -102,7 +102,7 @@ public class TestData {
         ShipmentMethod shipmentMethod2 = new ShipmentMethod();
         shipmentMethod2.setName("Kurier DPD");
         shipmentMethod2.setPrice(BigDecimal.valueOf(12.30));
-        shipmentMethod2.setImageUrl("https://inpost.pl/sites/default/files/2021-02/logo_Kurier.png");
+        shipmentMethod2.setImageUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/DPD_logo%28red%292015.png/800px-DPD_logo%28red%292015.png");
 
         shipmentMethodRepository.save(shipmentMethod);
         shipmentMethodRepository.save(shipmentMethod2);
@@ -115,7 +115,7 @@ public class TestData {
 
         PayMethod payMethod2 = new PayMethod();
         payMethod2.setName("Przedpłata - PayPal");
-        payMethod2.setImageUrl("https://pep.pl/online/wp-content/uploads/sites/2/2022/04/BLIK-LOGO-RGB.png");
+        payMethod2.setImageUrl("https://www.citypng.com/public/uploads/preview/transparent-hd-paypal-logo-701751694777788ilpzr3lary.png");
 
         payMethodRepository.save(payMethod);
         payMethodRepository.save(payMethod2);
